@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
@@ -162,9 +162,15 @@
   }
 
   .hint{
+    position:absolute;
+    left:50%;
+    top:138px;
+    transform:translateX(-50%);
+    width:100%;
     font-size:12.5px;
     color:#b98297;
     font-style:italic;
+    transition:top .18s ease;
   }
 
   /* final screen */
@@ -186,7 +192,7 @@
     position:relative;
     width:100%;
     max-width:320px;
-    height:150px;
+    height:280px;
   }
   .btn-yes{
     position:absolute;
@@ -293,8 +299,8 @@
       <div class="final-actions" id="finalActions">
         <button class="btn solid btn-yes" onclick="sayYes()">Haan, banungi ♥</button>
         <button class="btn btn-no" id="noBtn">Nahi</button>
+        <div class="hint" id="noHint">&nbsp;</div>
       </div>
-      <div class="hint" id="noHint">&nbsp;</div>
     </div>
 
     <div class="success" id="successBox">
@@ -345,10 +351,16 @@
   function dodgeNo(){
     const boxRect = actionsBox.getBoundingClientRect();
     const btnRect = noBtn.getBoundingClientRect();
-    const maxX = boxRect.width - btnRect.width;
+    const hintRect = noHint.getBoundingClientRect();
+
+    // always land below the hint line (which itself sits below Haan) — never above Haan
+    const minY = (hintRect.bottom - boxRect.top) + 10;
     const maxY = boxRect.height - btnRect.height;
+    const maxX = boxRect.width - btnRect.width;
+
     const newX = Math.max(0, Math.random() * maxX);
-    const newY = Math.max(0, Math.random() * maxY);
+    const newY = Math.min(Math.max(minY, minY + Math.random() * (maxY - minY)), maxY);
+
     noBtn.style.left = newX + 'px';
     noBtn.style.top = newY + 'px';
     noBtn.style.transform = 'translate(0,0)';
